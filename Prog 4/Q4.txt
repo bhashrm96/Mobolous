@@ -1,0 +1,66 @@
+Q.4 Write an example of joining two models in mongoDB and represent the use of pipeline inside lookup.
+
+
+A.4 We use the below syntactical code to join two models in mongoDB:-
+
+    {
+       $lookup:
+         {
+           from: <collection to join>,
+           localField: <field from the input documents>,
+           foreignField: <field from the documents of the "from" collection>,
+           as: <output array field>
+         }
+    }
+
+
+
+
+Part.2  The below code represents the use of pipeline inside lookup:-
+
+
+    
+    
+Assuming ywe are trying to lookup all cards documents which contains a specific keyword you want(e.g. "bhavya" in our example"), you may try following code:
+
+db.getCollection(<collection name>).aggregate([
+    {
+        $lookup: {
+            from: "card",
+            let: {
+                keywordList: "$keywords"
+            },
+            // this pipeline is used to filter only a list with the keyword
+            pipeline : [
+                {
+                    $project : {
+                        keywords : { 
+                            $filter: { 
+                                input: "$keywords", 
+                                as: "keyword", 
+                                cond: {
+                                    $eq : ["$$keyword.value", "bhavya"]
+                                } 
+                            }
+                        }
+                    }
+                }
+            ],
+            as: "filteredCardLookups"
+        }
+    },
+    {
+        $addFields : {
+            // this will help to filter out card collection lookup that contains no keyword
+            filteredCardLookups : { 
+                $filter: { 
+                    input: "$filteredCardLookups", 
+                    as: "filteredCardLookup", 
+                    cond: {
+                        $ne : ["$$filteredCardLookup.keywords", []]
+                    } 
+                }
+            }
+        }    
+    }
+]);

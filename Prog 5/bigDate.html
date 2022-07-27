@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Document</title>
+  </head>
+  <body>
+    <h1 align = 'center' id="message"></h1>
+
+    <h3 align = 'center'>You can validate any other date by going into prog. (Note: Enter any other date in Date.parse())</h3>
+
+    <br> <h3 align = 'center'>To Compare dates, Enter dates in dateCompare() and the click on console</h3>
+
+    <script>
+        let isValidDate = Date.parse('34/17/21');
+
+        if (isNaN(isValidDate)) {
+          document.getElementById('message').innerHTML = "This is not a valid date format.";
+        }
+        else{
+          document.getElementById('message').innerHTML = "This is a valid date format.";
+        }
+
+        function dateCompare(d1, d2){
+    const date1 = new Date(d1);
+    const date2 = new Date(d2);
+
+    if(date1 > date2){
+        console.log(`${d1} is greater than ${d2}`)
+    } else if(date1 < date2){
+        console.log(`${d2} is greater than ${d1}`)
+    } else{
+        console.log(`Both dates are equal`)
+    }
+}
+
+dateCompare("5/11/2020", "4/8/2019")
+dateCompare("26/07/2022", "26/10/2022")
+
+    </script>
+  </body>
+</html>
